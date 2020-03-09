@@ -65,10 +65,10 @@ void UBullCowCartridge::ProcessGuess(const FString& Guess){
     }
 
     //Show bulls and cows
-    int32 Bulls, Cows;
-    GetBullCows(Guess,Bulls,Cows);
+    
+    FBullCount Score = GetBullCows(Guess);
 
-    PrintLine(TEXT("You have %i bulls and %i cows"), Bulls, Cows);       
+    PrintLine(TEXT("You have %i bulls and %i cows"), Score.Bulls, Score.Cows);       
     
 }
 
@@ -85,22 +85,22 @@ void UBullCowCartridge::BuildValidWords(){
     }
 }
 
-void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int32& CowCount) const{
-    BullCount = 0;
-    CowCount = 0;
+FBullCount UBullCowCartridge::GetBullCows(const FString& Guess) const{
+    FBullCount Count;
     for (int32 Index = 0; Index < Guess.Len(); Index++){
         if(Guess[Index] == HiddenWord[Index]){
-            BullCount++;
+            Count.Bulls++;
             continue;
         }
         for (int32 Jindex = 0; Jindex < HiddenWord.Len(); Jindex++){
             if(Guess[Index] == HiddenWord[Jindex]){
-                CowCount++;
-                continue;
+                Count.Cows++;
+                break;
             }
         }
         
     }
+    return Count;
 }
 
 bool UBullCowCartridge::IsIsogram(const FString& Word) const{  
