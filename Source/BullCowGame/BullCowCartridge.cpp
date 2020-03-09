@@ -7,7 +7,7 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     Super::BeginPlay();
     BuildValidWords();
    
-    SetUpGame();     
+    SetUpGame();       
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
@@ -27,6 +27,8 @@ void UBullCowCartridge::SetUpGame(){
     int32 selectedIndex = FMath::RandRange(0,Isograms.Num()-1);
     HiddenWord = Isograms[selectedIndex];
     Lives=HiddenWord.Len();
+
+    PrintLine(TEXT("HiddenWord %s"), *HiddenWord);  
 
     PrintLine(TEXT("In this game you have to guess a %i \n character long isogram word"), HiddenWord.Len());
     PrintLine(TEXT("Press Tab to get into the terminal"));
@@ -86,6 +88,19 @@ void UBullCowCartridge::BuildValidWords(){
 void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int32& CowCount) const{
     BullCount = 0;
     CowCount = 0;
+    for (int32 Index = 0; Index < Guess.Len(); Index++){
+        if(Guess[Index] == HiddenWord[Index]){
+            BullCount++;
+            continue;
+        }
+        for (int32 Jindex = 0; Jindex < HiddenWord.Len(); Jindex++){
+            if(Guess[Index] == HiddenWord[Jindex]){
+                CowCount++;
+                continue;
+            }
+        }
+        
+    }
 }
 
 bool UBullCowCartridge::IsIsogram(const FString& Word) const{  
